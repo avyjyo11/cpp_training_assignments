@@ -6,15 +6,22 @@ enum class VisitType {
   YEARLY
 };
 
-struct Diagnostic {
-  std::string symptom;
+enum class Department {
+  GeneralWard,
+  EmergencyWard,
+  Pharmacy,
+  VIPWard
+};
+
+struct Diagnosis {
   std::string treatment;
-  std::string medicine;
+  std::vector<std::string> symptoms;
+  std::vector<std::string> medicines;
 };
 
 struct MedicalReport {
   std::string date{};
-  std::vector<Diagnostic> symptoms{};
+  std::vector<Diagnosis> diagnosis{};
   VisitType visitType{VisitType::ROUTINE};
 };
 
@@ -28,7 +35,6 @@ class Patient: public Person {
 
   private:
 
-
 };
 
 class Employee: public Person {
@@ -36,7 +42,7 @@ class Employee: public Person {
     Employee(int id, int age, const std::string& name): Person(id, age, name) {}
 
   protected:
-
+    Department dept;
 };
 
 class Person {
