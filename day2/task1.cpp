@@ -45,14 +45,17 @@ class Var {
     }
 
     Var& operator+(Var& a) {
-      if (a.m_type == VarType::INTEGER && m_type == VarType::INTEGER) {
-        m_intValue += a.m_intValue;
-      } else if (a.m_type == VarType::DOUBLE && m_type == VarType::DOUBLE) {
+      if (a.m_type != m_type) {
+        std::cout << "Type mismatch when adding" << std::endl;
+        return *this;
+      }
+      if (m_type == VarType::INTEGER) {
+        m_intValue += a.m_intValue
+      } else if (m_type == VarType::DOUBLE) {
         m_doubleValue += a.m_doubleValue;
-      } else if (a.m_type == VarType::STRING && m_type == VarType::STRING) {
+      } else if (m_type == VarType::STRING) {
         stringConcat(a.m_strValue);
       } else {
-        std::cout << "Type mismatch when adding" << std::endl;
       }
       return *this;
     }

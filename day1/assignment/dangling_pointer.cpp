@@ -9,8 +9,8 @@ int* getLocalPointer() {
 }
 
 int* getLocalPointerSolution() {
-    int *x = new int(42); // Allocate on the heap
-    return x;  // Returning pointer variable
+    int *x = new int(42);
+    return x;  
 }
 
 
