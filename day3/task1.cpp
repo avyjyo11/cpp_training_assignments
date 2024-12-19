@@ -3,30 +3,26 @@
 #include <iostream>
 
 enum VarType {
-  INTEGER,
+  UNKNOWN = -1,
+  INTEGER = 0,
   STRING,
   DOUBLE,
-  ARRAY
+  BOOLEAN
 };
 
 class Var { 
   public:
-    Var() {}
+    Var(): m_type(int(VarType::UNKNOWN)) {}
 
-    Var(const int a): m_type(int(VarType::INTEGER)) {
-      m_intValue = a;
-    }
+    Var(const int a): m_intValue(a), m_type(int(VarType::INTEGER)) {}
 
-    Var(const double a): m_type(int(VarType::DOUBLE)) {
-      m_doubleValue = a;
-    }
+    Var(const double a): m_doubleValue(a), m_type(int(VarType::DOUBLE)) {}
+
+    Var(const bool a): m_boolValue(a), m_type(int(VarType::BOOLEAN)) {}
 
     Var(const char* str): m_type(int(VarType::STRING)) {
-      std::cout << "str" << str << "\n";
-      m_strValue = new char(strlen(str) + 1);
-      for (int i = 0; i< strlen(str); i++) {
-        m_strValue[i] = str[i];
-      }
+      m_strValue = new char[strlen(str) + 1];
+      strcpy(m_strValue, str);
     }
 
     Var& operator=(const Var& a) {
@@ -35,10 +31,12 @@ class Var {
         m_intValue = a.m_intValue;
       } else if (a.m_type == VarType::DOUBLE) {
         m_doubleValue = a.m_doubleValue;
+      } else if (a.m_type == VarType::BOOLEAN) {
+        m_boolValue = a.m_boolValue;
       } else if (a.m_type == VarType::STRING) {
         delete[] m_strValue;
-        m_strValue = nullptr;
-        stringConcat(a.m_strValue);
+        m_strValue = new char[strlen(a.m_strValue)+1];
+        strcpy(m_strValue,a.m_strValue);  
       } else {
         std::cout << "Type mismatch when adding" << "\n";
       }
@@ -73,17 +71,6 @@ class Var {
       return *this;
     }
 
-    Var& operator>(Var& a) {
-       if (a.m_type == VarType::DOUBLE && m_type == VarType::DOUBLE) {
-        m_doubleValue += a.m_doubleValue;
-      } else if (a.m_type == VarType::STRING && m_type == VarType::STRING) {
-        stringConcat(a.m_strValue);
-      } else {
-        std::cout << "Type mismatch when adding" << "\n";
-      }
-      return *this;
-    }
-
     void display() {
       if (m_type == VarType::INTEGER) {
         std::cout << m_intValue << std::endl;
@@ -94,12 +81,27 @@ class Var {
       }
     }
 
+    int getInt() {
+      return m_intValue;
+    }
+
+    double getDouble() {
+      return m_doubleValue;
+    }
+
+    char* getString() {
+      return m_strValue;
+    }
+
+    bool getBool() {
+      return m_boolValue;
+    }
+
     friend std::ostream& operator<<(std::ostream&, const Var&);
 
     ~Var() {
-      // std::cout << "Detroying Var" << "\n";
+      std::cout << "Detroying Var" << "\n";
       if (m_type == VarType::STRING) {
-        // std::cout << "Detroying string" << "\n";
         delete[] m_strValue;
       }
     }
@@ -107,12 +109,13 @@ class Var {
   private:
     int m_intValue;
     double m_doubleValue; 
+    bool m_boolValue;
     char *m_strValue;
     uint8_t m_type;
 
     void stringConcat(const char* a) {
       int newLen = strlen(a) + strlen(m_strValue) + 1;
-      char *temp = new char(newLen);
+      char *temp = new char[newLen];
       strcpy(temp, m_strValue);
       delete m_strValue;
       strcat(temp, a);
@@ -125,6 +128,10 @@ std::ostream& operator<<(std::ostream& os, const Var& var) {
     os << "var:" << var.m_intValue;
   } else if (var.m_type == VarType::DOUBLE) {
     os << "var:" << var.m_doubleValue;
+  } else if (var.m_type == VarType::BOOLEAN) {
+    std::string boolstr = "true";
+    if (!var.m_boolValue) boolstr = "false";
+    os << "var:" << boolstr;
   } else {
     os << "var:" << var.m_strValue;
   }
@@ -132,23 +139,17 @@ std::ostream& operator<<(std::ostream& os, const Var& var) {
 }
 
 int main() {
-  // Var a = "hello";
-  // // Var b = "hello";
-  // // Var c = 12.33;
-  // Var d = "world";
+  Var a = "hello";
+  Var b = "hello2";
+  Var c = 12.33;
+  Var d = "world";
 
-  // a = "hi";
-  // a.display();
+  a = "hi";
+  a.display();
 
-  // a = a + d;
-  // a.display();
-
-  // std::cout << a << "\n";
-  const char *c = "leapfrog";
+  a = a + d;
+  a.display();
 
   std::cout << c;
-
-  delete c;
-
   return 0;
 }

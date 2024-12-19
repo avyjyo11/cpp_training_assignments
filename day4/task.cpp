@@ -24,9 +24,9 @@ public:
   ~LinkedList(){
     Node<T> *temp = m_head;
     while(temp){
-        Node<T> *t = temp->next;
-        delete temp;
-        temp = t;
+      Node<T> *t = temp->next;
+      delete temp;
+      temp = t;
     }
   }
 
