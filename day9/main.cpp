@@ -259,7 +259,7 @@ void convertToGrayscale(std::vector<std::vector<RGB>>& imageData,int width, int 
      for (int i = 0; i < height; ++i) {
         for (int j = 0; j < width; ++j) {
             RGB& color = imageData[i][j];
-            float gray = color.r * 0.2989f+color.r * 0.5870f+color.r * 0.1140f;
+            float gray = color.r * 0.2989f + color.g * 0.5870f + color.b * 0.1140f;
             color.r = gray;
             color.g = gray;
             color.b = gray;
